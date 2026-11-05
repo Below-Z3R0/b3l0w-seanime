@@ -1,0 +1,29 @@
+# Imagen publicada: el usuario no compila nada.
+# Build local para desarrollo: docker-compose.yml (con build:).
+services:
+  seanime:
+    image: ghcr.io/below-z3r0/seanime:${SEANIME_VERSION:-3.10.4}
+    container_name: seanime
+    restart: unless-stopped
+    user: "1000:1000"
+
+    ports:
+      - "43211:43211"
+
+    volumes:
+      - ./data:/data
+      - ./anime:/anime
+      - ./downloads:/downloads
+
+    environment:
+      SEANIME_DATA_DIR: /data
+      SEANIME_SERVER_HOST: "0.0.0.0"
+      SEANIME_SERVER_PORT: "43211"
+      TZ: ${TZ:-America/Panama}
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:43211/api/v1/status >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
