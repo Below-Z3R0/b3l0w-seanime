@@ -54,6 +54,8 @@ jobs:
             -v "$tmp/anime:/anime" \
             -v "$tmp/downloads:/downloads" \
             -e TZ=UTC \
+            -e SEANIME_SERVER_HOST=0.0.0.0 \
+            -e SEANIME_SERVER_PORT=43211 \
             seanime:ci
           for i in $(seq 1 30); do
             if curl -fsS http://127.0.0.1:43211/api/v1/status >/dev/null 2>&1; then
