@@ -47,7 +47,7 @@ jobs:
           set -euo pipefail
           tmp="$(mktemp -d)"
           mkdir -p "$tmp/data" "$tmp/anime" "$tmp/downloads"
-          chown -R 1000:1000 "$tmp"
+          chown -R 1000:1000 "$tmp" 2>/dev/null || sudo chown -R 1000:1000 "$tmp"
           docker run -d --name seanime-ci \
             -p 43211:43211 \
             -v "$tmp/data:/data" \
