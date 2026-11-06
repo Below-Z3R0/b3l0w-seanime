@@ -68,7 +68,7 @@ jobs:
           docker exec seanime-ci test -f /data/.seeded
           docker exec seanime-ci test -f /data/seanime.db
           docker rm -f seanime-ci
-          rm -rf "$tmp"
+          sudo rm -rf "$tmp"
 
       - name: Diagnostics on failure
         if: failure()
