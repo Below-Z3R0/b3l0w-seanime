@@ -1,0 +1,56 @@
+name: seanime-manifest
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Tag de 5rahim/seanime (sin la v)"
+        required: true
+        default: "3.10.4"
+
+concurrency:
+  group: seanime-manifest-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  manifest:
+    name: manifest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
+
+      - uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # El manifest une la imagen amd64 y la arm64 bajo un solo tag.
+      # buildx no necesita descargar las capas: manipula el índice.
+      - name: Create multi-arch manifest
+        run: |
+          set -euo pipefail
+          img=ghcr.io/below-z3r0/seanime
+          docker buildx imagetools create \
+            --tag "$img:${{ inputs.version }}" \
+            --tag "$img:latest" \
+            "$img:${{ inputs.version }}" \
+            "$img:arm64-${{ inputs.version }}"
+
+      - name: Verify the manifest
+        run: |
+          set -euo pipefail
+          img=ghcr.io/below-z3r0/seanime
+          docker buildx imagetools inspect "$img:${{ inputs.version }}"
+          # El índice tiene que tener las dos plataformas.
+          out="$(docker buildx imagetools inspect "$img:${{ inputs.version }}" --raw)"
+          echo "$out" | grep -q 'linux/amd64' || { echo "falta linux/amd64"; exit 1; }
+          echo "$out" | grep -q 'linux/arm64' || { echo "falta linux/arm64"; exit 1; }
+          echo "manifest con amd64 y arm64: ok"
