@@ -10,9 +10,9 @@ services:
       - "43211:43211"
 
     volumes:
-      - ${SEANIME_HOME:-${HOME}/.local/share/seanime}/data:/data
-      - ${SEANIME_HOME:-${HOME}/.local/share/seanime}/anime:/anime
-      - ${SEANIME_HOME:-${HOME}/.local/share/seanime}/downloads:/downloads
+      - ${SEANIME_HOME:-${HOME}/Services/seanime}/data:/data
+      - ${SEANIME_HOME:-${HOME}/Services/seanime}/anime:/anime
+      - ${SEANIME_HOME:-${HOME}/Services/seanime}/downloads:/downloads
 
     environment:
       SEANIME_DATA_DIR: /data
