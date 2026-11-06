@@ -50,7 +50,7 @@ jobs:
           img=ghcr.io/below-z3r0/seanime
           docker buildx imagetools inspect "$img:${{ inputs.version }}"
           # El índice tiene que tener las dos plataformas.
-          out="$(docker buildx imagetools inspect "$img:${{ inputs.version }}" --raw)"
+          out="$(docker buildx imagetools inspect "$img:${{ inputs.version }}")"
           echo "$out" | grep -q 'linux/amd64' || { echo "falta linux/amd64"; exit 1; }
           echo "$out" | grep -q 'linux/arm64' || { echo "falta linux/arm64"; exit 1; }
           echo "manifest con amd64 y arm64: ok"
