@@ -1,6 +1,3 @@
-data/
-anime/
-downloads/
 *.tar.gz
 *.log
 .env

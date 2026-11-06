@@ -32,7 +32,7 @@ source oficial de Seanime como contexto; el Dockerfile vive en este repo.
 ## Usar la imagen publicada
 
 ```bash
-mkdir -p data anime downloads
+mkdir -p ~/.local/share/seanime/{data,anime,downloads}
 export SEANIME_VERSION=3.10.4
 docker compose pull
 docker compose up -d
@@ -57,13 +57,16 @@ Tags publicados en GHCR:
 
 ## Volúmenes
 
+El estado vive en `~/.local/share/seanime`, no en el repo:
+
 | Host | Container | Contenido |
 |---|---|---|
-| `./data` | `/data` | DB, config, extensiones, cache |
-| `./anime` | `/anime` | Biblioteca |
-| `./downloads` | `/downloads` | Descargas en curso |
+| `~/.local/share/seanime/data` | `/data` | DB, config, extensiones, cache |
+| `~/.local/share/seanime/anime` | `/anime` | Biblioteca |
+| `~/.local/share/seanime/downloads` | `/downloads` | Descargas en curso |
 
-Los tres son bind mounts: `docker compose down` no borra nada.
+Los tres son bind mounts: `docker compose down` no borra nada. Para cambiar la
+ubicación, definí `SEANIME_HOME` en `.env`.
 
 ## Configuración por defecto
 
@@ -114,7 +117,7 @@ Para arm64, ejecutar `seanime-image-arm64`; publica tags `arm64-<version>` y
 
 ```bash
 docker run --rm --user "$(id -u):$(id -g)" \
-  -v ./data:/data:ro \
+  -v ~/.local/share/seanime/data:/data:ro \
   -v .:/backup \
   alpine tar czf /backup/seanime-data-$(date +%F).tar.gz -C /data .
 ```
@@ -131,10 +134,10 @@ b3l0w-seanime/
 │   ├── entrypoint.sh     siembra + bloqueo de updates
 │   └── extensions/       8 plugins JSON
 ├── .github/workflows/    build amd64 y arm64
-├── data/                 (gitignored)
-├── anime/                (gitignored)
-└── downloads/            (gitignored)
 ```
+
+El estado del servicio (`data/`, `anime/`, `downloads/`) no vive en el repo:
+está en `~/.local/share/seanime`.
 
 ## Pitfalls conocidos
 
