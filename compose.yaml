@@ -1,7 +1,7 @@
 # Imagen publicada: el usuario no compila nada.
 services:
   seanime:
-    image: ghcr.io/below-z3r0/seanime:${SEANIME_VERSION:-3.10.4}
+    image: ghcr.io/below-z3r0/seanime:${IMAGE:-3.10.4}
     container_name: seanime
     restart: unless-stopped
     user: "1000:1000"
