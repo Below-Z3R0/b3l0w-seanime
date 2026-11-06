@@ -64,8 +64,9 @@ jobs:
             sleep 2
           done
           curl -fsS http://127.0.0.1:43211/api/v1/status >/dev/null
-          curl -fsS http://127.0.0.1:43211/ >/dev/null
-          test -f "$tmp/data/.seeded"
+          test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:43211/)" = "200"
+          docker exec seanime-ci test -f /data/.seeded
+          docker exec seanime-ci test -f /data/seanime.db
           docker rm -f seanime-ci
           rm -rf "$tmp"
 
