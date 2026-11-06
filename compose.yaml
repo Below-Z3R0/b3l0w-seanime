@@ -1,5 +1,4 @@
 # Imagen publicada: el usuario no compila nada.
-# Build local para desarrollo: docker-compose.yml (con build:).
 services:
   seanime:
     image: ghcr.io/below-z3r0/seanime:${SEANIME_VERSION:-3.10.4}
